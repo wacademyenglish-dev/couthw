@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WOLF LABS | Nature Log (Homework)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Fonts: Lora (Elegant Serif), Nunito (Body) & Caveat (Handwriting) -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === THE COUNTRYSIDE RETREAT (COTTAGECORE THEME) === */
+        :root {
+            --bg-paper: #F4F1EA;       /* Warm off-white/beige */
+            --bg-card: #FFFFFF;        /* Pure white for cards */
+            --accent-sage: #7C9082;    /* Calming Sage Green */
+            --accent-terra: #C87A5D;   /* Terracotta / Warm Clay */
+            --accent-sun: #EAB251;     /* Morning Sun Yellow */
+            --text-main: #2C3A2E;      /* Deep Forest Green (Almost Black) */
+            --text-muted: #7A8B7D;     /* Muted Green/Gray */
+            --shadow-soft: rgba(44, 58, 46, 0.08); /* Soft forest shadow */
+            --error-red: #D9534F;
+        }
+
+        body { 
+            font-family: 'Nunito', sans-serif; 
+            background-color: var(--text-main);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-title { font-family: 'Lora', serif; }
+        .font-handwriting { font-family: 'Caveat', cursive; font-size: 1.25em; }
+
+        /* === MOBILE PHONE MOCKUP === */
+        #mobile-frame {
+            width: 100%;
+            max-width: 430px; /* iPhone Max size */
+            height: 100dvh;
+            background-color: var(--bg-paper);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(124, 144, 130, 0.2);
+            /* Subtle paper texture */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        @media (min-width: 431px) {
+            #mobile-frame {
+                height: 90vh;
+                border-radius: 40px;
+                border: 12px solid var(--text-main);
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 2px var(--text-muted);
+            }
+        }
+
+        /* Fake Notch */
+        .phone-notch {
+            display: none;
+        }
+        @media (min-width: 431px) {
+            .phone-notch {
+                display: block;
+                position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+                width: 150px; height: 30px; background-color: var(--text-main);
+                border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 50;
+            }
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 24px; font-size: 12px; font-weight: 600; z-index: 40; position: relative; color: var(--text-main);
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* BUTTONS */
+        .btn-sage {
+            background: var(--accent-sage); color: white; border-radius: 50px;
+            font-family: 'Nunito', sans-serif; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; transition: all 0.3s ease; border: none; cursor: pointer;
+            box-shadow: 0 8px 20px rgba(124, 144, 130, 0.3);
+        }
+        .btn-sage:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(124, 144, 130, 0.4); background: #6B7C70; }
+        .btn-sage:active { transform: scale(0.96); }
+
+        .btn-terra {
+            background: var(--accent-terra); color: white; border-radius: 50px;
+            font-family: 'Nunito', sans-serif; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; transition: all 0.3s ease; border: none; cursor: pointer;
+            box-shadow: 0 8px 20px rgba(200, 122, 93, 0.3);
+        }
+        .btn-terra:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(200, 122, 93, 0.4); background: #B3684D; }
+        .btn-terra:active { transform: scale(0.96); }
+
+        .btn-outline {
+            background: transparent; border: 2px solid var(--accent-sage); color: var(--accent-sage); border-radius: 50px;
+            font-family: 'Nunito', sans-serif; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; transition: all 0.2s ease; cursor: pointer;
+        }
+        .btn-outline:active { background: rgba(124, 144, 130, 0.1); transform: scale(0.96); }
+
+        /* QUIZ OPTIONS (MCQ) */
+        .mcq-option {
+            background: var(--bg-card); border: 2px solid transparent;
+            transition: all 0.2s ease; cursor: pointer; display: flex; align-items: center; padding: 1.2rem; border-radius: 20px;
+            width: 100%; text-align: left; box-shadow: 0 4px 15px var(--shadow-soft);
+        }
+        .mcq-option:active:not(.locked-check) { transform: scale(0.98); border-color: var(--accent-sage); }
+        .mcq-option.correct { background: #F4F6F4; border-color: var(--accent-sage); color: var(--accent-sage); box-shadow: 0 0 15px rgba(124, 144, 130, 0.2); }
+        .mcq-option.wrong { background: #FDF3F2; border-color: var(--error-red); color: var(--error-red); }
+
+        /* ANIMATIONS */
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(3px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-5px, 0, 0); } 40%, 60% { transform: translate3d(5px, 0, 0); } }
+
+        /* PROGRESS BAR */
+        .progress-container { width: 100%; height: 6px; background: rgba(0,0,0,0.05); overflow: hidden; border-radius: 10px; margin-bottom: 24px;}
+        .progress-fill { height: 100%; background: var(--accent-sage); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(124, 144, 130, 0.5);}
+
+        #confetti-canvas { position: absolute; inset: 0; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body>
+
+    <!-- MOBILE CONTAINER -->
+    <div id="mobile-frame">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="phone-notch"></div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span id="clock">09:41</span>
+            <div class="flex items-center gap-2">
+                <i class="fas fa-signal text-[10px]"></i>
+                <i class="fas fa-wifi text-[10px]"></i>
+                <i class="fas fa-battery-full text-xs text-[var(--text-main)]"></i>
+            </div>
+        </div>
+
+        <!-- START SCREEN (FIXED WITH SCROLL) -->
+        <div id="screen-start" class="flex-grow flex flex-col p-8 relative z-10 animate-in fade-in overflow-y-auto">
+            
+            <div class="my-auto flex flex-col items-center w-full">
+                <div class="w-24 h-24 rounded-full bg-white mb-8 flex items-center justify-center border-4 border-[#E8ECD7] shadow-[0_0_20px_rgba(124,144,130,0.2)]">
+                    <i class="fas fa-seedling text-5xl text-[var(--accent-sage)]"></i>
+                </div>
+                
+                <div class="text-center space-y-3 w-full">
+                    <p class="text-[var(--accent-sage)] font-bold text-[10px] tracking-[0.4em] uppercase bg-white px-4 py-1.5 rounded-full inline-block border border-gray-200 shadow-sm">Homework Protocol</p>
+                    <h1 class="text-5xl font-black text-[var(--text-main)] leading-none tracking-tight uppercase font-title mt-4">Nature<br><span class="text-[var(--accent-terra)] italic">Log</span></h1>
+                    <p class="text-sm text-[var(--text-muted)] mt-4 leading-relaxed px-2 font-bold">Complete this 15-node evaluation to prove your observational skills.</p>
+                </div>
+                
+                <div class="w-full bg-white border border-gray-100 p-6 rounded-3xl mt-8 text-left mb-6 shadow-sm">
+                    <p class="text-[10px] text-[var(--accent-terra)] font-bold uppercase tracking-widest border-b border-gray-100 pb-3 mb-4">> FIELD DATA</p>
+                    <ul class="text-sm text-gray-600 space-y-3 font-bold">
+                        <li class="flex items-center"><div class="w-6 h-6 rounded-full bg-[#FAFAF7] border border-gray-100 flex items-center justify-center mr-3"><i class="fas fa-check text-[var(--accent-sage)] text-[10px]"></i></div> Nodes: 15</li>
+                        <li class="flex items-center"><div class="w-6 h-6 rounded-full bg-[#FAFAF7] border border-gray-100 flex items-center justify-center mr-3"><i class="fas fa-check text-[var(--accent-sage)] text-[10px]"></i></div> Focus: Present Continuous</li>
+                        <li class="flex items-center"><div class="w-6 h-6 rounded-full bg-[#FAFAF7] border border-gray-100 flex items-center justify-center mr-3"><i class="fas fa-check text-[var(--accent-sage)] text-[10px]"></i></div> Diff: A1 Core</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Button pushed to bottom but accessible via scroll -->
+            <button onclick="startHomework()" class="btn-sage w-full py-4 text-base mt-8 mb-4 flex-shrink-0">
+                Open Journal
+            </button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="screen-quiz" class="hidden flex-grow flex-col relative z-10 h-full overflow-hidden">
+            <!-- Header -->
+            <div class="pt-6 pb-2 px-6 flex justify-between items-center z-20 flex-shrink-0">
+                <div class="flex flex-col">
+                    <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Entry Progress</span>
+                    <span class="text-sm font-black text-[var(--accent-sage)] font-title" id="progress-text">01 / 15</span>
+                </div>
+                <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
+                    <i class="fas fa-leaf text-[var(--accent-terra)] text-[10px]"></i>
+                    <span class="text-xs font-black text-[var(--text-main)]" id="score-text">000</span>
+                </div>
+            </div>
+            
+            <div class="px-6 w-full flex-shrink-0"><div class="progress-container"><div id="progress-bar" class="progress-fill" style="width: 0%;"></div></div></div>
+
+            <!-- Question Area -->
+            <div class="flex-grow overflow-y-auto px-6 pb-32 flex flex-col" id="question-container">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Next Button Container -->
+            <div class="p-6 bg-gradient-to-t from-[var(--bg-paper)] via-[var(--bg-paper)] to-transparent mt-auto hidden absolute bottom-0 left-0 w-full z-30" id="next-btn-container">
+                <button onclick="nextQuestion()" class="btn-sage w-full py-4 text-base shadow-lg flex justify-center items-center gap-2">
+                    Next Entry <i class="fas fa-arrow-right text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="screen-result" class="hidden flex-grow flex-col p-8 relative z-10 animate-in fade-in overflow-y-auto">
+            <div class="my-auto flex flex-col items-center text-center w-full">
+                <div id="result-icon" class="w-32 h-32 rounded-full bg-white mb-8 flex items-center justify-center border-4 border-gray-100 shadow-xl">
+                    <i class="fas fa-book-open text-6xl text-[var(--accent-sage)]"></i>
+                </div>
+                
+                <h2 class="text-4xl font-black text-[var(--text-main)] tracking-tight uppercase font-title mb-3" id="result-title">Journal Saved</h2>
+                <p class="text-[10px] text-[var(--accent-sage)] font-bold uppercase tracking-widest border border-gray-200 px-4 py-1.5 bg-white rounded-full mb-10 shadow-sm" id="result-rank">Rank: Master Farmer</p>
+                
+                <div class="w-full bg-white border border-gray-100 rounded-3xl py-8 mb-12 shadow-sm">
+                    <p class="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2">Final Score</p>
+                    <p class="text-6xl font-black text-[var(--text-main)] font-title" id="final-score">15/15</p>
+                </div>
+            </div>
+            
+            <button onclick="location.reload()" class="btn-outline w-full py-4 text-sm mt-8 mb-4 flex-shrink-0">
+                Close Journal
+            </button>
+        </div>
+
+    </div>
+
+    <!-- HOMEWORK ENGINE (JS) -->
+    <script>
+        // --- SECURITY & UTILS ---
+        const esc = (s) => s ? String(s).replace(/\\/g, '\\\\').replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/\n/g, '\\n').replace(/\r/g, '') : "";
+
+        // -- Mobile Clock Logic --
+        function updateClock() {
+            const now = new Date();
+            let h = now.getHours();
+            let m = now.getMinutes();
+            h = h < 10 ? '0'+h : h;
+            m = m < 10 ? '0'+m : m;
+            document.getElementById('clock').innerText = `${h}:${m}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- HOMEWORK DATA (15 COUNTRYSIDE QUESTIONS) ---
+        const homeworkData = [
+            {
+                q: "Look at the cow! It ___ grass.",
+                options: ["is eating", "are eating", "eating"],
+                correct: 0,
+                hint: "'The cow' is singular (It), so we use 'is' + verb-ing."
+            },
+            {
+                q: "What is the correct form for RIGHT NOW?",
+                options: ["I am walking.", "I walk.", "I walking."],
+                correct: 0,
+                hint: "Use Verb To Be (am/is/are) + Verb-ING for actions happening right now."
+            },
+            {
+                q: "How do we add 'ING' to the verb 'Make'?",
+                options: ["Making", "Makeing", "Macking"],
+                correct: 0,
+                hint: "If the verb ends in 'E', drop the 'E' and add 'ING'."
+            },
+            {
+                q: "The dogs ___ running. They are sleeping.",
+                options: ["isn't", "aren't", "not"],
+                correct: 1,
+                hint: "'Dogs' is plural (They), so the negative is 'aren't'."
+            },
+            {
+                q: "He ___ slicing a mango for breakfast.",
+                options: ["are", "am", "is"],
+                correct: 2,
+                hint: "For 'He', we use the verb 'is'."
+            },
+            {
+                q: "What is a large farm animal that gives milk?",
+                options: ["A cow", "A barn", "A bowl"],
+                correct: 0,
+                hint: "Moo!"
+            },
+            {
+                q: "I ___ learning English right now.",
+                options: ["are", "am", "is"],
+                correct: 1,
+                hint: "For 'I', we use the verb 'am'."
+            },
+            {
+                q: "What is a sweet yellow fruit?",
+                options: ["A strawberry", "A mango", "Oats"],
+                correct: 1,
+                hint: "Jay sliced this fruit for breakfast."
+            },
+            {
+                q: "What is the spelling rule for 'Slice'?",
+                options: ["Drop the 'e' and add 'ing'", "Just add 'ing'", "Double the 'c'"],
+                correct: 0,
+                hint: "Slice ends in 'e'. Slice -> Slicing."
+            },
+            {
+                q: "___ you listening to me?",
+                options: ["Is", "Do", "Are"],
+                correct: 2,
+                hint: "In a question with 'you', start with 'Are'."
+            },
+            {
+                q: "What do we call a wooden wall on a farm?",
+                options: ["A barn", "A bowl", "A fence"],
+                correct: 2,
+                hint: "It keeps the animals inside the field."
+            },
+            {
+                q: "They ___ sleeping. They are awake!",
+                options: ["aren't", "isn't", "am not"],
+                correct: 0,
+                hint: "'They' takes the plural negative 'aren't'."
+            },
+            {
+                q: "What are you doing?",
+                options: ["I am making breakfast.", "I make breakfast.", "I making breakfast."],
+                correct: 0,
+                hint: "The question is in Present Continuous, so answer in Present Continuous."
+            },
+            {
+                q: "What is a small red fruit?",
+                options: ["A strawberry", "A mango", "A cow"],
+                correct: 0,
+                hint: "Very popular in desserts."
+            },
+            {
+                q: "Look! The sun ___ shining.",
+                options: ["am", "are", "is"],
+                correct: 2,
+                hint: "'The sun' is singular (It), so we use 'is'."
+            }
+        ];
+
+        // --- APP STATE ---
+        let currentQ = 0;
+        let score = 0;
+        let isLocked = false;
+
+        // --- NAVIGATION ---
+        function showScreen(id) {
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-result').classList.add('hidden');
+            
+            const target = document.getElementById(id);
+            target.classList.remove('hidden');
+            target.classList.add('flex');
+            target.classList.remove('fade-in');
+            void target.offsetWidth; // trigger reflow
+            target.classList.add('fade-in');
+        }
+
+        function startHomework() {
+            // Randomize questions
+            shuffleArray(homeworkData);
+            homeworkData.forEach(q => {
+                const correctText = q.options[q.correct];
+                shuffleArray(q.options);
+                q.correct = q.options.indexOf(correctText);
+            });
+
+            currentQ = 0;
+            score = 0;
+            updateTopBar();
+            renderQuestion();
+            showScreen('screen-quiz');
+        }
+
+        // --- QUIZ LOGIC ---
+        function updateTopBar() {
+            document.getElementById('progress-text').innerText = `${String(currentQ + 1).padStart(2, '0')} / ${homeworkData.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentQ) / homeworkData.length) * 100}%`;
+            document.getElementById('score-text').innerText = String(score * 10).padStart(3, '0');
+        }
+
+        function renderQuestion() {
+            isLocked = false;
+            document.getElementById('next-btn-container').classList.add('hidden');
+            
+            const qData = homeworkData[currentQ];
+            const container = document.getElementById('question-container');
+            const letters = ['A', 'B', 'C'];
+
+            let html = `
+                <div class="mb-8 mt-4 animate-in fade-in">
+                    <h2 class="text-3xl font-black text-[var(--text-main)] leading-snug font-title">${qData.q.replace(/\[(.*?)\]/g, '<span class="text-[var(--accent-terra)]">$1</span>')}</h2>
+                </div>
+                <div class="space-y-4 w-full animate-in fade-in" id="options-box" style="animation-delay: 0.1s; animation-fill-mode: both;">
+            `;
+
+            qData.options.forEach((opt, idx) => {
+                html += `
+                    <button class="mcq-option group" onclick="selectOption(${idx}, this)">
+                        <div class="w-10 h-10 rounded-full border border-gray-200 bg-gray-50 flex items-center justify-center text-sm font-bold text-gray-400 mr-5 font-title group-hover:text-[var(--accent-sage)] group-hover:border-[var(--accent-sage)] transition-colors">${letters[idx]}</div>
+                        <span class="text-lg font-bold text-[var(--text-main)] font-nunito tracking-wide">${opt}</span>
+                    </button>
+                `;
+            });
+
+            html += `
+                </div>
+                <div id="feedback-box" class="hidden mt-8 p-6 rounded-2xl bg-white border-l-4 border-[var(--accent-sage)] shadow-sm animate-in fade-in mb-8">
+                    <p class="text-[10px] font-bold text-[var(--accent-sage)] uppercase tracking-[0.2em] mb-2">> FIELD NOTES</p>
+                    <p class="text-base text-[var(--text-muted)] font-handwriting font-bold text-xl leading-relaxed">"${qData.hint}"</p>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            container.scrollTop = 0;
+        }
+
+        function selectOption(selectedIdx, btnEl) {
+            if (isLocked) return;
+            isLocked = true;
+
+            const qData = homeworkData[currentQ];
+            const isCorrect = selectedIdx === qData.correct;
+            const parent = document.getElementById('options-box');
+
+            // Lock buttons
+            Array.from(parent.children).forEach((child, i) => {
+                child.classList.add('locked-check');
+                if (i === qData.correct) {
+                    child.classList.add('correct'); 
+                } else if (i !== qData.correct && i === selectedIdx) {
+                    child.classList.add('wrong'); 
+                } else {
+                    child.classList.add('opacity-40'); 
+                }
+            });
+
+            if (isCorrect) {
+                score++;
+                shootConfetti();
+            } else {
+                // Error shake effect
+                document.getElementById('mobile-frame').classList.add('shake');
+                setTimeout(() => document.getElementById('mobile-frame').classList.remove('shake'), 400);
+                
+                // Show hint if wrong
+                const fbBox = document.getElementById('feedback-box');
+                fbBox.classList.remove('hidden');
+                fbBox.classList.replace('border-[var(--accent-sage)]', 'border-[var(--error-red)]');
+                fbBox.querySelector('p').classList.replace('text-[var(--accent-sage)]', 'text-[var(--error-red)]');
+            }
+
+            updateTopBar();
+            
+            // Show Next button
+            const nextBtn = document.getElementById('next-btn-container');
+            nextBtn.classList.remove('hidden');
+            nextBtn.style.animation = "fadeIn 0.3s ease forwards";
+            
+            // Scroll down to ensure Next button and feedback are visible
+            setTimeout(() => {
+                document.getElementById('question-container').scrollTo({
+                    top: document.getElementById('question-container').scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if (currentQ < homeworkData.length) {
+                updateTopBar();
+                renderQuestion();
+            } else {
+                document.getElementById('progress-bar').style.width = `100%`;
+                setTimeout(showResult, 300);
+            }
+        }
+
+        function showResult() {
+            showScreen('screen-result');
+            
+            document.getElementById('final-score').innerText = `${score}/15`;
+            
+            const rankEl = document.getElementById('result-rank');
+            const iconEl = document.getElementById('result-icon');
+            const titleEl = document.getElementById('result-title');
+
+            const percentage = score / homeworkData.length;
+
+            if (percentage === 1) {
+                titleEl.innerText = "Perfect Log";
+                rankEl.innerText = "Rank: Master Farmer";
+                rankEl.className = "text-[10px] text-white font-bold uppercase tracking-widest border border-[var(--accent-sage)] px-4 py-1.5 bg-[var(--accent-sage)] rounded-full mb-10 shadow-sm";
+                iconEl.innerHTML = '<i class="fas fa-seedling text-6xl text-[var(--accent-sage)]"></i>';
+                shootConfetti(); setTimeout(shootConfetti, 500);
+            } else if (percentage >= 0.7) {
+                titleEl.innerText = "Good Notes";
+                rankEl.innerText = "Rank: Explorer";
+                rankEl.className = "text-[10px] text-white font-bold uppercase tracking-widest border border-[var(--accent-terra)] px-4 py-1.5 bg-[var(--accent-terra)] rounded-full mb-10 shadow-sm";
+                iconEl.innerHTML = '<i class="fas fa-tractor text-6xl text-[var(--accent-terra)]"></i>';
+            } else {
+                titleEl.innerText = "Blank Pages";
+                rankEl.innerText = "Rank: City Tourist";
+                rankEl.className = "text-[10px] text-gray-500 font-bold uppercase tracking-widest border border-gray-300 px-4 py-1.5 bg-gray-100 rounded-full mb-10 shadow-sm";
+                iconEl.innerHTML = '<i class="fas fa-city text-6xl text-gray-400"></i>';
+            }
+        }
+
+        // --- UTILS ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // --- CONFETTI ENGINE (NATURE STYLE) ---
+        function shootConfetti() {
+            const cCanvas = document.getElementById('confetti-canvas'); 
+            const cCtx = cCanvas.getContext('2d');
+            const frame = document.getElementById('mobile-frame');
+            cCanvas.width = frame.offsetWidth; 
+            cCanvas.height = frame.offsetHeight;
+            
+            const pieces = []; 
+            const colors = ['#7C9082', '#C87A5D', '#EAB251', '#FFFFFF'];
+            
+            for(let i=0; i<40; i++) {
+                pieces.push({ 
+                    x: cCanvas.width / 2, 
+                    y: cCanvas.height / 2, 
+                    vx: (Math.random() - 0.5) * 16, 
+                    vy: (Math.random() - 1) * 16 - 4, 
+                    size: Math.random() * 8 + 4, 
+                    color: colors[Math.floor(Math.random() * colors.length)], 
+                    rot: Math.random() * 360, 
+                    rotSpeed: (Math.random() - 0.5) * 10 
+                });
+            }
+            
+            let animationId;
+            function animateC() {
+                cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height); 
+                let active = false;
+                pieces.forEach(p => {
+                    p.x += p.vx; 
+                    p.y += p.vy; 
+                    p.vy += 0.5; // gravity
+                    p.rot += p.rotSpeed; 
+                    if(p.y < cCanvas.height) active = true;
+                    
+                    cCtx.save(); 
+                    cCtx.translate(p.x, p.y); 
+                    cCtx.rotate(p.rot * Math.PI / 180); 
+                    cCtx.fillStyle = p.color; 
+                    // Circular confetti for nature look
+                    cCtx.beginPath(); cCtx.arc(0, 0, p.size/2, 0, Math.PI*2); cCtx.fill(); 
+                    cCtx.restore(); 
+                });
+                
+                if(active) {
+                    animationId = requestAnimationFrame(animateC); 
+                } else {
+                    cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+                }
+            }
+            animateC();
+        }
+    </script>
+</body>
+</html>
